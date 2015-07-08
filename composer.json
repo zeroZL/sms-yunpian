@@ -1,0 +1,53 @@
+{
+    "name": "huying/sms-ronglian",
+    "description": "容联云通讯短信发送包",
+    "keywords": [
+        "huying",
+        "sms",
+        "短信",
+        "api",
+        "接口",
+        "容联"
+    ],
+    "homepage": "https://github.com/echo58/sms-ronglian",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Xujian Chen",
+            "email": "xjchen@echo58.com",
+            "homepage": "https://github.com/xjchengo",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "huying/sms": "dev-master"
+    },
+    "require-dev": {
+        "phpunit/phpunit" : "4.*",
+        "scrutinizer/ocular": "~1.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Huying\\Sms\\RongLian\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Huying\\Sms\\RongLian\\Test\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "phpunit"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url":  "git@github.com:echo58/sms.git"
+        }
+    ]
+}
