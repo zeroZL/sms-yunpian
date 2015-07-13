@@ -1,4 +1,4 @@
-# 容联云通讯短信发送包
+# 云片通讯短信发送包
 
 [![Latest Version on Packagist][ico-version]][link-packagist]
 [![Software License][ico-license]](LICENSE.md)
@@ -7,7 +7,7 @@
 [![Quality Score][ico-code-quality]][link-code-quality]
 [![Total Downloads][ico-downloads]][link-downloads]
 
-本包实现了容联云通讯的短信发送功能。
+本包实现了云片通讯的短信发送功能。
 
 ## 安装
 
