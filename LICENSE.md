@@ -1,6 +1,6 @@
 # The MIT License (MIT)
 
-Copyright (c) 2015 Xujian Chen <xjchen@echo58.com>
+Copyright (c) 2015 zero ZL <305098929@qq.com>
 
 > Permission is hereby granted, free of charge, to any person obtaining a copy
 > of this software and associated documentation files (the "Software"), to deal

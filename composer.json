@@ -1,21 +1,21 @@
 {
     "name": "huying/sms-ronglian",
-    "description": "容联云通讯短信发送包",
+    "description": "云片网络短信发送包",
     "keywords": [
         "huying",
         "sms",
         "短信",
         "api",
         "接口",
-        "容联"
+        "云片"
     ],
-    "homepage": "https://github.com/echo58/sms-ronglian",
+    "homepage": "https://github.com/echo58/sms-yunpian",
     "license": "MIT",
     "authors": [
         {
-            "name": "Xujian Chen",
-            "email": "xjchen@echo58.com",
-            "homepage": "https://github.com/xjchengo",
+            "name": "zero ZL",
+            "email": "305098929@qq.com",
+            "homepage": "https://github.com/zeroZL",
             "role": "Developer"
         }
     ],
@@ -28,12 +28,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Huying\\Sms\\RongLian\\": "src"
+            "Huying\\Sms\\YunPian\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Huying\\Sms\\RongLian\\Test\\": "tests"
+            "Huying\\Sms\\YunPian\\Test\\": "tests"
         }
     },
     "scripts": {

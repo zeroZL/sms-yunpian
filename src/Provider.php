@@ -1,11 +1,12 @@
 <?php
 
-namespace Huying\Sms\RongLian;
+namespace Huying\Sms\YunPian;
 
 use GuzzleHttp\Psr7\Response;
 use Huying\Sms\AbstractProvider;
 use Huying\Sms\Message;
 use Huying\Sms\ProviderException;
+use GuzzleHttp\Exception\ClientException;
 
 /**
  * 容联短信平台接口实现
@@ -19,35 +20,41 @@ class Provider extends AbstractProvider
      *
      * @var string
      */
-    protected $restUrl = 'https://app.cloopen.com:8883';
+    protected $restUrl = 'http://yunpian.com';
 
     /**
      * 接口版本
      *
      * @var string
      */
-    protected $softVersion = '2013-12-26';
+    protected $softVersion = 'v1';
 
     /**
-     * 主账户 ID
+     *  用户唯一标识
+     *  @var string
+     */
+    protected $apiKey;
+
+    /**
+     * 资源名 通常对应一类API
      *
      * @var string
      */
-    protected $accountSid;
+    protected $resource;
 
     /**
-     * 主账号授权令牌
+     * 为资源提供的操作方法
      *
      * @var string
      */
-    protected $authToken;
+    protected $function='tpl_send';
 
     /**
-     * 应用 ID
+     * 请求响应的结果格式
      *
      * @var string
      */
-    protected $appId;
+    protected $format='json';
 
     /**
      * 当前时间戳
@@ -65,9 +72,8 @@ class Provider extends AbstractProvider
     {
         if ($key == self::PROVIDER_OPTIONS) {
             return [
-                'accountSid',
-                'authToken',
-                'appId',
+                'apiKey',
+                'resource',
             ];
         } elseif ($key == self::MESSAGE_OPTIONS) {
             return [
@@ -106,8 +112,8 @@ class Provider extends AbstractProvider
     protected function getUrl(Message $message)
     {
         return $this->restUrl.'/'.$this->softVersion
-            .'/Accounts/'.$this->accountSid
-            .'/SMS/TemplateSMS?sig='.md5($this->accountSid.$this->authToken.$this->getTimestamp());
+            .'/'.$this->resource
+            .'/'.$this->function.'.'.$this->format;
     }
 
     /**
@@ -128,9 +134,8 @@ class Provider extends AbstractProvider
     protected function getRequestHeaders()
     {
         return [
-            'Accept' => 'application/json;',
-            'Content-Type' => 'application/json;charset=utf-8;',
-            'Authorization' => base64_encode($this->accountSid.':'.$this->getTimestamp()),
+            'Accept' => 'application/json;charset=utf-8;',
+            'Content-Type' => 'application/x-www-form-urlencoded;charset=utf-8;',
         ];
     }
 
@@ -143,37 +148,36 @@ class Provider extends AbstractProvider
      */
     protected function getRequestPayload(Message $message)
     {
-        $recipients = implode(',', $message->getRecipients());
+        $mobile = implode(',', $message->getRecipients());
         $templateId = (string) $message->getTemplateId();
-        $data = $message->getData();
-        array_walk($data, function (&$item) {
-            $item = (string) $item;
-        });
-        $data = array_values($data);
-
-        return json_encode([
-            'to' => $recipients,
-            'appId' => $this->appId,
-            'templateId' => $templateId,
-            'datas' => $data,
-        ]);
+        $templateValue = urlencode((string) $message->getData());
+        return "apikey=$this->apiKey&tpl_id=$templateId&tpl_value=$templateValue&mobile=$mobile";
     }
 
     /**
      * 处理短信接口的返回结果
      *
-     * @param Response $response
+     * @param $response
      * @return array
      * @throws ProviderException
      */
-    protected function handleResponse(Response $response)
+    protected function handleResponse($response)
     {
-        $parsedResponse = self::parseJson($response->getBody());
-        if ($parsedResponse['statusCode'] != '000000') {
-            throw new ProviderException($parsedResponse['statusMsg'], $parsedResponse['statusCode'], $parsedResponse);
-        }
-
-        return $parsedResponse;
+        if($response instanceof Response) {
+            $parsedResponse = self::parseJson($response->getBody());
+            var_dump($parsedResponse);
+            if ($parsedResponse['code'] != 0) {
+                throw new ProviderException($parsedResponse['msg'], $parsedResponse['code'], $parsedResponse);
+            }
+            return $parsedResponse;
+        } elseif($response instanceof \GuzzleHttp\Exception\ClientException ) {
+            $parsedResponse = self::parseJson($response->getResponse()->getBody());
+            var_dump($parsedResponse);
+                if ($parsedResponse != null&&$parsedResponse['code'] != 0) {
+                    throw new ProviderException($parsedResponse['msg'], $parsedResponse['code'], $parsedResponse);
+                }
+                return $parsedResponse;
+            }
     }
 
     /**
@@ -183,6 +187,6 @@ class Provider extends AbstractProvider
      */
     public function getName()
     {
-        return 'RongLian';
+        return 'YunPian';
     }
 }

@@ -14,7 +14,7 @@
 通过 Composer 安装
 
 ``` bash
-$ composer require huying/sms-ronglian
+$ composer require huying/sms-yunpian
 ```
 
 ## 使用方法
@@ -22,10 +22,9 @@ $ composer require huying/sms-ronglian
 ### 实例化短信平台类
 
 ```php
-$provider = new Huying\Sms\RongLian\Provider([
-    'accountSid' => 'xxxxx',
-    'authToken' => 'xxxxx',
-    'appId' => 'xxxxxx',
+$provider = new Huying\Sms\YunPian\Provider([
+    'apiKey' => 'xxxxx',
+    'resource' => 'xxxxx',
 ]);
 ```
 
@@ -34,19 +33,15 @@ $provider = new Huying\Sms\RongLian\Provider([
 ```php
 $message = Message::create()
     ->setRecipient('18800000000')
-    ->setTemplateId('1')
     ->setData([
-        '1',
-        '2',
+        '#company#=信派科技&#code#=1234',
     ])->using($provider)
     ->send();
     
 $message = Message::create([
     'recipient' => '18800000000',
-    'template_id' => '1',
     'data' => [
-        '1',
-        '2',
+        '#company#=信派科技&#code#=1234',
     ],
 ])using($provider))->send();
 ```
@@ -72,24 +67,24 @@ if ($message->getStatus() == Huying\Sms\MessageStatus::STATUS_SENT) {
 
 ## 开发者
 
-- [Xujian Chen][link-author]
+- [zero ZL][link-author]
 - [所有贡献者][link-contributors]
 
 ## 许可协议
 
 本项目使用 MIT 协议，详情请查看 [License File](LICENSE.md)。
 
-[ico-version]: https://img.shields.io/packagist/v/huying/sms-ronglian.svg?style=flat-square
+[ico-version]: https://img.shields.io/packagist/v/huying/sms-yunpian.svg?style=flat-square
 [ico-license]: https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square
-[ico-travis]: https://img.shields.io/travis/echo58/sms-ronglian/master.svg?style=flat-square
-[ico-scrutinizer]: https://img.shields.io/scrutinizer/coverage/g/echo58/sms-ronglian.svg?style=flat-square
-[ico-code-quality]: https://img.shields.io/scrutinizer/g/echo58/sms-ronglian.svg?style=flat-square
-[ico-downloads]: https://img.shields.io/packagist/dt/huying/sms-ronglian.svg?style=flat-square
+[ico-travis]: https://img.shields.io/travis/echo58/sms-yunpian/master.svg?style=flat-square
+[ico-scrutinizer]: https://img.shields.io/scrutinizer/coverage/g/echo58/sms-yunpian.svg?style=flat-square
+[ico-code-quality]: https://img.shields.io/scrutinizer/g/echo58/sms-yunpian.svg?style=flat-square
+[ico-downloads]: https://img.shields.io/packagist/dt/huying/sms-yunpian.svg?style=flat-square
 
-[link-packagist]: https://packagist.org/packages/huying/sms-ronglian
-[link-travis]: https://travis-ci.org/echo58/sms-ronglian
-[link-scrutinizer]: https://scrutinizer-ci.com/g/echo58/sms-ronglian/code-structure
-[link-code-quality]: https://scrutinizer-ci.com/g/echo58/sms-ronglian
-[link-downloads]: https://packagist.org/packages/huying/sms-ronglian
-[link-author]: https://github.com/xjchengo
+[link-packagist]: https://packagist.org/packages/huying/sms-yunpian
+[link-travis]: https://travis-ci.org/echo58/sms-yunpian
+[link-scrutinizer]: https://scrutinizer-ci.com/g/echo58/sms-yunpian/code-structure
+[link-code-quality]: https://scrutinizer-ci.com/g/echo58/sms-yunpian
+[link-downloads]: https://packagist.org/packages/huying/sms-yunpian
+[link-author]: https://github.com/zeroZL
 [link-contributors]: ../../contributors

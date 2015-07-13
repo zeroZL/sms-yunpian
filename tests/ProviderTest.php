@@ -1,6 +1,6 @@
 <?php
 
-namespace Huying\Sms\RongLian\Test;
+namespace Huying\Sms\YunPian\Test;
 
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Handler\MockHandler;
@@ -8,7 +8,7 @@ use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
 use Huying\Sms\Message;
 use Huying\Sms\MessageStatus;
-use Huying\Sms\RongLian\Provider;
+use Huying\Sms\YunPian\Provider;
 
 class ProviderTest extends \PHPUnit_Framework_TestCase
 {
@@ -18,20 +18,18 @@ class ProviderTest extends \PHPUnit_Framework_TestCase
     public function testConstructFailed()
     {
         $provider = new Provider([
-            'accountSid' => '123',
-            'authToken' => '123',
+            'apiKey' => '123',
         ]);
     }
 
     public function testGetName()
     {
         $provider = new Provider([
-            'accountSid' => '123',
-            'authToken' => '123',
-            'appId' => '123',
+            'apiKey' => '123',
+            'resource' => 'sms',
         ]);
 
-        $this->assertEquals('RongLian', $provider->getName());
+        $this->assertEquals('YunPian', $provider->getName());
     }
 
     public function getParamsRight()
@@ -40,39 +38,31 @@ class ProviderTest extends \PHPUnit_Framework_TestCase
         $providerOptions = [];
         $messages = [];
 
-        if (getenv('ACCOUNT_SID')) {
+        if (getenv('API_KEY')) {
             $providerOptions[] = [
-                'accountSid' => getenv('ACCOUNT_SID'),
-                'authToken' => getenv('AUTH_TOKEN'),
-                'appId' => getenv('APP_ID'),
+                'apiKey' => getenv('API_KEY'),
+                'resource' => getenv('RESOURCE'),
             ];
             $httpClients[] = new HttpClient();
             $messages[] = Message::create()
                 ->setRecipient(getenv('TELEPHONE'))
                 ->setTemplateId(getenv('TEMPLATE_ID'))
-                ->setData([
-                    rand(100000, 999999),
-                    rand(1, 100),
-                ]);
+                ->setData("#company#=云片网&#code#=2134");
         }
 
         $providerOptions[] = [
-            'accountSid' => 'test_sid',
-            'authToken' => 'test_token',
-            'appId' => 'test_app_id',
+            'apiKey' => 'test_key',
+            'resource' => 'test_resource',
         ];
         $mock = new MockHandler([
-            new Response(200, [], '{"statusCode":"000000","TemplateSMS":{"dateCreated":"20130201155306","smsMessageSid":" ff8080813c373cab013c94b0f0512345"}}'),
+            new Response(200, [], '{"code":"0","msg":"ok","result":{"count":"1","fee":" 1","sid":"1097"}}'),
         ]);
         $handler = HandlerStack::create($mock);
         $httpClients[] = new HttpClient(['handler' => $handler]);
         $messages[] = Message::create()
             ->setRecipient('18800000000')
             ->setTemplateId('123456')
-            ->setData([
-                '4585',
-                '15'
-            ]);
+            ->setData("#company#=云片网&#code#=2134");
 
         return array_map(function ($options, $httpClient, $message) {
             return [$options, $httpClient, $message];
@@ -98,39 +88,31 @@ class ProviderTest extends \PHPUnit_Framework_TestCase
         $providerOptions = [];
         $messages = [];
 
-        if (getenv('ACCOUNT_SID')) {
+        if (getenv('API_KEY')) {
             $providerOptions[] = [
-                'accountSid' => getenv('ACCOUNT_SID'),
-                'authToken' => getenv('AUTH_TOKEN'),
-                'appId' => getenv('APP_ID'),
+                'apiKey' => getenv('API_KEY'),
+                'resource' => getenv('RESOURCE'),
             ];
             $httpClients[] = new HttpClient();
             $messages[] = Message::create()
                 ->setRecipient(getenv('TELEPHONE'))
-                ->setTemplateId('xxxx')
-                ->setData([
-                    rand(100000, 999999),
-                    rand(1, 100),
-                ]);
+                ->setTemplateId('1')
+                ->setData("#company#=云片网&#code#=2134");
         }
 
         $providerOptions[] = [
-            'accountSid' => 'test_sid',
-            'authToken' => 'test_token',
-            'appId' => 'test_app_id',
+            'apiKey' => 'test_key',
+            'resource' => 'test_resource',
         ];
         $mock = new MockHandler([
-            new Response(200, [], '{"statusCode":"000001","statusMsg":"you are wrong, boy!"}'),
+            new Response(200, [], '{"code":"1","msg":"请求参数缺失","detail":"补充必须传入的参数"}'),
         ]);
         $handler = HandlerStack::create($mock);
         $httpClients[] = new HttpClient(['handler' => $handler]);
         $messages[] = Message::create()
             ->setRecipient('18800000000')
             ->setTemplateId('123456')
-            ->setData([
-                '4585',
-                '15'
-            ]);
+            ->setData("#company#=云片网&#code#=2134");
 
         return array_map(function ($options, $httpClient, $message) {
             return [$options, $httpClient, $message];
